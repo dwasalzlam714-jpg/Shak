@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منصة ذكريات الشعب التفاعلية 🪐</title>
+    <title>منصة التحكم والذكريات التفاعلية 🪐</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -13,15 +13,25 @@
             display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative;
         }
 
-        /* 🎆 النيون السحري اللانهائي في الخلفية */
+        /* 🎆 خلفية النيون الاحترافية */
         body::before, body::after {
             content: ''; position: absolute; width: 350px; height: 350px; border-radius: 50%; pointer-events: none; z-index: 1;
         }
-        body::before { background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%); top: 5%; left: -80px; animation: pulseGlow 8s infinite alternate ease-in-out; }
-        body::after { background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%); bottom: 10%; right: -80px; animation: pulseGlow 12s infinite alternate ease-in-out; }
-        @keyframes pulseGlow { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.3); } }
+        body::before { background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, transparent 70%); top: 5%; left: -80px; animation: pulseGlow 8s infinite alternate ease-in-out; }
+        body::after { background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, transparent 70%); bottom: 10%; right: -80px; animation: pulseGlow 12s infinite alternate ease-in-out; }
+        @keyframes pulseGlow { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.2); } }
 
         .container { width: 100%; max-width: 480px; z-index: 10; padding-bottom: 80px; }
+
+        /* 🔔 التنبيه النيون الذكي */
+        .custom-alert {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: rgba(239, 68, 68, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid #ef4444; border-radius: 16px; padding: 15px; text-align: center;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4); z-index: 2000; font-weight: bold;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: white;
+        }
+        .custom-alert.show { top: 20px; }
 
         /* الشاشات الرئيسية */
         .screen { display: none; animation: fadeIn 0.4s ease-out; }
@@ -34,16 +44,16 @@
             border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 22px; margin-bottom: 20px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.5);
         }
-        .card h2 { font-size: 18px; color: #06b6d4; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(6,182,212,0.15); padding-bottom: 8px; }
+        .card h2 { font-size: 17px; color: #06b6d4; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(6,182,212,0.15); padding-bottom: 8px; }
 
         /* المدخلات والأزرار */
         .input-group { margin-bottom: 14px; text-align: right; }
         .input-group label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; }
         .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid #475569; border-radius: 12px; color: white; outline: none; font-size: 14px; text-align: center;
+            width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid #475569; border-radius: 12px; color: white; outline: none; font-size: 14px; text-align: center;
         }
         .input-group textarea { text-align: right; resize: none; height: 80px; }
-        .input-group input:focus, .input-group textarea:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
+        .input-group input:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
         
         .btn {
             width: 100%; padding: 12px; background: linear-gradient(90deg, #a855f7, #06b6d4);
@@ -51,14 +61,16 @@
         }
         .btn:active { transform: scale(0.98); }
 
+        .forget-link { display: block; text-align: center; font-size: 12px; color: #94a3b8; margin-top: 12px; cursor: pointer; text-decoration: underline; }
+
         /* الهيدر وشريط التنقل السفلي */
         .app-header { text-align: center; margin: 15px 0 25px 0; }
         .app-header h1 { font-size: 24px; font-weight: 900; color: #a855f7; text-shadow: 0 0 15px rgba(168,85,247,0.3); }
 
         .nav-bar {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;
-            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
         }
         .nav-item { color: #94a3b8; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-item.active { color: #06b6d4; }
@@ -66,75 +78,76 @@
         /* بروفايل وحاسبة العمر */
         .profile-badge { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .avatar { width: 60px; height: 60px; border-radius: 50%; background: #a855f7; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2px solid #06b6d4; }
-        .age-live-box { background: rgba(6, 182, 212, 0.1); padding: 12px; border-radius: 12px; font-weight: bold; color: #06b6d4; text-align: center; font-size: 14px; line-height: 1.8; margin-top: 10px; }
+        .age-live-box { background: rgba(6, 182, 212, 0.08); padding: 12px; border-radius: 12px; font-weight: bold; color: #06b6d4; text-align: center; font-size: 14px; line-height: 1.8; margin-top: 10px; }
 
         /* قائمة الأصدقاء والشات */
         .user-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 10px 15px; border-radius: 12px; margin-bottom: 8px; }
         .add-friend-btn { background: #06b6d4; border: none; padding: 5px 12px; border-radius: 8px; color: white; font-size: 12px; font-weight: bold; cursor: pointer; }
         
         .chat-box { height: 180px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; position: relative; }
+        .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
         .msg-me { background: #a855f7; align-self: flex-start; border-bottom-left-radius: 2px; }
         .msg-other { background: #334155; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .msg-broadcast { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; align-self: center; text-align: center; color: #fef08a; border-radius: 10px; width: 100%; max-width: 100%; }
+        .msg-broadcast { background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; align-self: center; text-align: center; color: #fef08a; border-radius: 10px; width: 100%; }
 
-        /* شاشة المكالمات الرهيبة */
-        .call-interface { display: none; text-align: center; padding: 30px 10px; animation: pulseCall 2s infinite alternate; }
-        @keyframes pulseCall { from { background: rgba(6, 182, 212, 0.05); } to { background: rgba(168, 85, 247, 0.1); } }
-        .call-avatar { width: 100px; height: 100px; border-radius: 50%; background: #06b6d4; font-size: 45px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 0 25px #06b6d4; }
-        .call-status { color: #67e8f9; font-size: 14px; margin-bottom: 30px; font-weight: bold; }
-        .hangup-btn { background: #ef4444; color: white; width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(239,68,68,0.4); }
-
-        /* السجلات */
-        .log-list { max-height: 120px; overflow-y: auto; list-style: none; font-size: 12px; color: #fca5a5; }
-        .log-item { padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+        /* لوحة تحكم الأدمن الفخمة */
+        .admin-box { border: 1px solid #ef4444; background: rgba(239,68,68,0.03); margin-top: 25px; padding: 15px; border-radius: 20px; }
+        .log-list { max-height: 150px; overflow-y: auto; font-size: 12px; color: #fca5a5; list-style: none; padding: 5px; background: rgba(0,0,0,0.4); border-radius: 10px; }
+        .log-item { padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); text-align: right; }
     </style>
 </head>
 <body>
 
+    <!-- 🔔 منبثق التنبيه المخصص -->
+    <div id="popupAlert" class="custom-alert">تنبيه</div>
+
     <div class="container">
         
-        <!-- 🔒 شاشة الترحيب والتسجيل الفوري -->
+        <!-- 🔒 شاشة تسجيل الدخول الإلزامية الاسم وكلمة المرور -->
         <div id="screenAuth" class="screen active-screen">
-            <div class="app-header" style="margin-top: 50px;">
-                <h1>🪐 بوابة مجتمعنا التفاعلي</h1>
-                <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">ادخل اسمك الحين وطير مع العيال فوراً</p>
+            <div class="app-header" style="margin-top: 40px;">
+                <h1>🪐 بوابة الدخول الآمنة</h1>
+                <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">سجل دخولك باسمك وباسوردك الخاص</p>
             </div>
             <div class="card">
-                <h2>📝 تسجيل دخول / حساب جديد</h2>
+                <h2>🔐 الموافقة والتحقق من الهوية</h2>
                 <div class="input-group">
-                    <label>اسم المستخدم (خويك بيعرفك به)</label>
-                    <input type="text" id="authUsername" placeholder="اكتب اسمك الحقيقي أو لقبك">
+                    <label>الاسم الحقيقي أو المعرف</label>
+                    <input type="text" id="authUsername" placeholder="مثال: شاكر">
                 </div>
                 <div class="input-group">
-                    <label>اختر أي رمز لملفك الشخصي</label>
+                    <label>كلمة المرور السريّة</label>
+                    <input type="password" id="authPassword" placeholder="••••••••">
+                </div>
+                <div class="input-group">
+                    <label>أيقونة الحساب (Avatar)</label>
                     <select id="authAvatar">
-                        <option value="👑">👑 الملك</option>
+                        <option value="👑">👑 الملك (الأدمن)</option>
                         <option value="😎">😎 الكول</option>
                         <option value="🥷">🥷 المخفي</option>
-                        <option value="🎯">🎯 القناص</option>
                         <option value="🔥">🔥 الأسطورة</option>
                     </select>
                 </div>
-                <button class="btn" onclick="handleLogin()">ابدأ الأكشن الآن 🚀</button>
+                <button class="btn" onclick="handleLogin()">تحقق وموافقة على الدخول 🚀</button>
+                <span class="forget-link" onclick="triggerForgetPassword()">نسيت كلمة المرور؟ اضغط هنا 🔑</span>
             </div>
         </div>
 
-        <!-- 📱 شاشة الملف الشخصي وحاسبة العمر -->
+        <!-- 👤 شاشة الحساب وحاسبة العمر ونسبة الحب -->
         <div id="screenProfile" class="screen">
             <div class="app-header">
-                <h1>👤 ملفك الشخصي والأدوات</h1>
+                <h1>👤 ملفك التفاعلي</h1>
             </div>
             <div class="card">
                 <div class="profile-badge">
                     <div class="avatar" id="myAvatarDisplay">😎</div>
                     <div>
                         <h3 id="myUsernameDisplay" style="color: white; font-size: 18px;">المستخدم</h3>
-                        <p style="color: #94a3b8; font-size: 12px;">عضو نشط بالمنصة ✨</p>
+                        <p id="userRoleBadge" style="color: #06b6d4; font-size: 12px;">عضو نشط ✨</p>
                     </div>
                 </div>
                 
-                <h2 style="font-size: 15px; margin-top: 20px;">🗓️ حاسبة العمر الحيّة</h2>
+                <h2>🗓️ حاسبة العمر الحيّة</h2>
                 <div class="input-group">
                     <label>اختر تاريخ ميلادك بالتفصيل:</label>
                     <input type="date" id="myBirthdate" onchange="saveBirthdate()">
@@ -142,28 +155,28 @@
                 <div class="age-live-box" id="liveAgeOutput">اختر تاريخ ميلادك لتفعيل العداد الحي...</div>
             </div>
 
-            <!-- ❤️ أداة نسبة الحب الرهيبة المضافة -->
+            <!-- ❤️ نسبة الحب -->
             <div class="card">
-                <h2>❤️ رادار الحب والانسجام الفوري</h2>
+                <h2>❤️ رادار الانسجام ونسبة الحب</h2>
                 <div class="input-group">
-                    <input type="text" id="loveNameTarget" placeholder="اكتب اسم حبيبتك أو الشريك هنا">
+                    <input type="text" id="loveNameTarget" placeholder="اكتب اسم شريك حياتك هنا">
                 </div>
                 <button class="btn" onclick="checkLovePercent()">احسب نسبة الانسجام الحين ⚡️</button>
-                <div class="age-live-box" id="loveOutput" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">اكتب الاسم واضغط على الزر لمعرفة النتيجة...</div>
+                <div class="age-live-box" id="loveOutput" style="background: rgba(236, 72, 153, 0.08); color: #ec4899;">اكتب الاسم واضغط على الزر لمعرفة النتيجة...</div>
             </div>
         </div>
 
-        <!-- 👥 شاشة الأصدقاء والبحث عنهم -->
+        <!-- 👥 شاشة الأصدقاء والمكالمات -->
         <div id="screenFriends" class="screen">
             <div class="app-header">
-                <h1>👥 أصدقاء الجروب والمكالمات</h1>
+                <h1>👥 جروب المنصة والمكالمات</h1>
             </div>
             <div class="card">
-                <h2>🔍 أضف أصدقاء جدد للـقائمة</h2>
+                <h2>🔍 قائمة المستخدمين المسجلين بالمنصة</h2>
                 <div id="allUsersContainer"></div>
             </div>
             <div class="card">
-                <h2>✅ عيال الجروب (دردشة ومكالمات)</h2>
+                <h2>✅ أصدقائي المقربين (اتصال سريع)</h2>
                 <div id="myFriendsContainer">لا يوجد أصدقاء مضافين حالياً.</div>
             </div>
         </div>
@@ -171,48 +184,52 @@
         <!-- 💬 شاشة الدردشة والرسائل الجماعية -->
         <div id="screenChat" class="screen">
             <div class="app-header">
-                <h1>💬 غرف الدردشة والرسائل</h1>
+                <h1>💬 غرف الدردشة والبرودكاست</h1>
             </div>
             
-            <!-- 📢 ميزة الرسائل الجماعية البث المباشر للكل -->
-            <div class="card" style="border: 1px solid #eab308; background: rgba(234, 179, 8, 0.05);">
-                <h2 style="color: #eab308;">📢 بث رسالة جماعية لكل الجروب فوراً</h2>
+            <div class="card" style="border: 1px solid #eab308; background: rgba(234, 179, 8, 0.03);">
+                <h2 style="color: #eab308;">📢 بث رسالة جماعية شاملة للكل</h2>
                 <div class="input-group">
-                    <textarea id="broadcastText" placeholder="اكتب رسالة جماعية تروح لكل الأعضاء في نفس الوقت الحين..."></textarea>
+                    <textarea id="broadcastText" placeholder="اكتب رسالة برودكاست تروح لكل الغرف..."></textarea>
                 </div>
-                <button class="btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="sendBroadcastMessage()">إرسال برودكاست جماعي 📣</button>
+                <button class="btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="sendBroadcastMessage()">بث الرسالة الجماعية 📣</button>
             </div>
 
             <div class="card">
-                <h2>🗣️ المحادثة الحالية: <span id="chatWithTitle" style="color: #06b6d4;">اختر صديق أولاً</span></h2>
+                <h2>🗣️ شات: <span id="chatWithTitle" style="color: #06b6d4;">اختر صديق أولاً</span></h2>
                 <div class="chat-box" id="chatBoxMessages"></div>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" id="chatInputMessage" placeholder="اكتب رسالتك الخاصة...">
+                    <input type="text" id="chatInputMessage" placeholder="اكتب رسالتك...">
                     <button class="btn" style="width: auto; padding: 0 20px; margin-top: 0;" onclick="sendMessage()">إرسال</button>
                 </div>
             </div>
         </div>
 
-        <!-- 📞 شاشة واجهة المكالمة الصوتية المحاكية الرهيبة -->
+        <!-- 📞 شاشة المكالمات الصوتية -->
         <div id="screenCall" class="screen">
-            <div class="app-header">
-                <h1>📞 مكالمة صوتية حية</h1>
-            </div>
-            <div class="card call-interface">
-                <div class="call-avatar" id="callAvatarIcon">👤</div>
-                <h2 id="callTargetName" style="color: white; font-size: 22px; margin-bottom: 5px;">خويك</h2>
-                <div class="call-status" id="callStatusText">جاري الاتصال عبر الشبكة الذكية...</div>
-                <button class="hangup-btn" onclick="endCall()">❌</button>
+            <div class="container" style="text-align: center; padding-top: 40px;">
+                <div class="card" style="padding: 40px 20px;">
+                    <div id="callAvatarIcon" style="font-size: 60px; margin-bottom: 20px;">👤</div>
+                    <h2 id="callTargetName" style="justify-content: center; border: none; font-size: 24px;">خويك</h2>
+                    <p id="callStatusText" style="color: #67e8f9; margin: 20px 0;">جاري الاتصال...</p>
+                    <button class="hangup-btn" style="background:#ef4444; width:60px; height:60px; border-radius:50%; border:none; color:white; font-size:22px;" onclick="endCall()">❌</button>
+                </div>
             </div>
         </div>
 
-        <!-- 👁️ سجل التحركات السري العام -->
-        <div id="globalLogsCard" class="card" style="display: none; border: 1px dashed #ef4444; background: rgba(239,68,68,0.02); margin-top: 30px;">
-            <h2 style="color: #ef4444; border-bottom-color: rgba(239,68,68,0.15);">👁️ رادار السجلات وتحركات الجروب (لوحة الإدارة)</h2>
-            <ul class="log-list" id="logsContainer"></ul>
+        <!-- 👁️ لوحة تحكم السجلات ومراقبة الشات (خاصة بالأدمن الرئيسي فقط) -->
+        <div id="globalAdminCard" class="card admin-box" style="display: none;">
+            <h2 style="color: #ef4444; border-bottom-color: rgba(239,68,68,0.2); font-weight: 900;">👁️ رادار الأدمن الرئيسي (خاص بـ شاكر فقط)</h2>
+            <p style="font-size: 11px; color: #fca5a5; margin-bottom: 10px;">بصفتك المسؤول، يمكنك هنا مراقبة تحركات النظام وقراءة دردشات الأعضاء السرية بالكامل:</p>
+            
+            <h3 style="font-size:13px; color:#a855f7; margin-bottom:5px;">📋 سجل الأحداث والموافقات:</h3>
+            <ul class="log-list" id="logsContainer" style="margin-bottom:15px;"></ul>
+
+            <h3 style="font-size:13px; color:#06b6d4; margin-bottom:5px;">💬 أرشيف ومراقبة كل محادثات الجروب:</h3>
+            <div class="log-list" id="adminAllChatsContainer" style="max-height: 180px; overflow-y: auto; color:#cbd5e1; font-size:11px; line-height:1.6;"></div>
         </div>
 
-        <!-- 🗺️ شريط التنقل السفلي الاحترافي -->
+        <!-- 🗺️ شريط التنقل السفلي -->
         <div class="nav-bar" id="appNavBar" style="display: none;">
             <div class="nav-item active" id="navProfile" onclick="navTo('screenProfile')">👤 الحساب</div>
             <div class="nav-item" id="navFriends" onclick="navTo('screenFriends')">👥 الأصدقاء</div>
@@ -223,37 +240,73 @@
     </div>
 
     <script>
-        if(!localStorage.getItem('app_users')) localStorage.setItem('app_users', JSON.stringify([]));
-        if(!localStorage.getItem('app_chats')) localStorage.setItem('app_chats', JSON.stringify([]));
-        if(!localStorage.getItem('app_logs')) localStorage.setItem('app_logs', JSON.stringify(["نظام الرادار جاهز لمراقبة الأكشن 🚨"]));
+        // إعداد داتا تجريبية مسجلة مسبقاً إذا كانت فارغة
+        if(!localStorage.getItem('app_users') || JSON.parse(localStorage.getItem('app_users')).length === 0) {
+            localStorage.setItem('app_users', JSON.stringify([
+                { name: "شاكر", password: "123", avatar: "👑", birthdate: "2000-01-01", friends: ["أحمد", "سارة"], isAdmin: true },
+                { name: "أحمد", password: "111", avatar: "😎", birthdate: "1998-05-12", friends: ["شاكر"] },
+                { name: "سارة", password: "222", avatar: "🔥", birthdate: "2002-09-20", friends: ["شاكر"] }
+            ]));
+        }
+        if(!localStorage.getItem('app_chats')) {
+            localStorage.setItem('app_chats', JSON.stringify([
+                { from: "أحمد", to: "سارة", msg: "هلا سارة، شفتي لوحة التحكم الجديدة؟", isBroadcast: false },
+                { from: "سارة", to: "أحمد", msg: "اي تجنن، بس انتبه شاكر يقدر يراقبنا هههه", isBroadcast: false }
+            ]));
+        }
+        if(!localStorage.getItem('app_logs')) localStorage.setItem('app_logs', JSON.stringify(["النظام الأمني جاهز وتم تفعيل جدار الحماية 🛡️"]));
 
         let currentUser = null;
         let activeChatFriend = null;
         let ageInterval = null;
         let callTimeout = null;
 
+        function showCustomAlert(message, isSuccess = false) {
+            const alertBox = document.getElementById('popupAlert');
+            alertBox.innerText = message;
+            alertBox.style.background = isSuccess ? 'rgba(16, 185, 129, 0.95)' : 'rgba(239, 68, 68, 0.95)';
+            alertBox.style.borderColor = isSuccess ? '#10b981' : '#ef4444';
+            alertBox.style.boxShadow = isSuccess ? '0 10px 25px rgba(16, 185, 129, 0.4)' : '0 10px 25px rgba(239, 68, 68, 0.4)';
+            alertBox.classList.add('show');
+            setTimeout(() => { alertBox.classList.remove('show'); }, 3000);
+        }
+
+        function triggerForgetPassword() {
+            showCustomAlert("🔑 تم إرسال طلب تصفير الباسورد للـ المطور الرئيسي شاكر بنجاح.");
+            addLog("⚠️ أحدهم ضغط على 'نسيت كلمة المرور' وبانتظار موافقتك.");
+        }
+
         function handleLogin() {
             const username = document.getElementById('authUsername').value.trim();
+            const pass = document.getElementById('authPassword').value.trim();
             const avatar = document.getElementById('authAvatar').value;
 
-            if(!username) { alert("اكتب اسمك الكريم أولاً ليتعرف عليك أصدقاؤك! 😎"); return; }
+            if(!username || !pass) { showCustomAlert("يا صاحبي لازم تكتب الاسم والباسورد معاً للموافقة! 🔐"); return; }
 
             let users = JSON.parse(localStorage.getItem('app_users'));
             let userObj = users.find(u => u.name.toLowerCase() === username.toLowerCase());
 
             if(!userObj) {
-                userObj = { name: username, avatar: avatar, birthdate: "", friends: [] };
+                // تسجيل مستخدم جديد بالباسورد الذي اختاره
+                userObj = { name: username, password: pass, avatar: avatar, birthdate: "", friends: [], isAdmin: false };
                 users.push(userObj);
                 localStorage.setItem('app_users', JSON.stringify(users));
-                addLog(`👤 [ ${username} ] سجل عضوية جديدة ودخل المنصة فوراً!`);
+                addLog(`👤 عضوية جديدة: تم تسجيل [ ${username} ] وباسورده الخاص.`);
             } else {
-                addLog(`🔓 [ ${username} ] قام بتسجيل الدخول مجدداً.`);
+                // التحقق من صحة كلمة المرور للمستخدم الحالي
+                if(userObj.password !== pass) {
+                    showCustomAlert("❌ الاسم أو الباسورد خطأ يا صاحبي! تأكد.");
+                    return;
+                }
+                addLog(`🔓 تم منح الموافقة لدخول: [ ${username} ].`);
             }
 
             currentUser = userObj;
             
             document.getElementById('myUsernameDisplay').innerText = currentUser.name;
             document.getElementById('myAvatarDisplay').innerText = currentUser.avatar;
+            document.getElementById('userRoleBadge').innerText = currentUser.isAdmin ? "👑 الأدمن العام للمنصة" : "عضو نشط بالمنصة ✨";
+
             if(currentUser.birthdate) {
                 document.getElementById('myBirthdate').value = currentUser.birthdate;
                 startAgeClock();
@@ -261,7 +314,14 @@
 
             document.getElementById('screenAuth').classList.remove('active-screen');
             document.getElementById('appNavBar').style.display = 'flex';
-            document.getElementById('globalLogsCard').style.display = 'block';
+            
+            // 👁️ شرط ظهور لوحة الإدارة والأدمن (فقط إذا كان المستخدم الأدمن شاكر)
+            if(currentUser.isAdmin || currentUser.name === "شاكر") {
+                document.getElementById('globalAdminCard').style.display = 'block';
+                renderAdminChats();
+            } else {
+                document.getElementById('globalAdminCard').style.display = 'none';
+            }
             
             navTo('screenProfile');
             renderFriendsTab();
@@ -270,25 +330,26 @@
         function navTo(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
             document.getElementById(screenId).classList.add('active-screen');
             
             if(screenId === 'screenProfile') document.getElementById('navProfile').classList.add('active');
             if(screenId === 'screenFriends') { document.getElementById('navFriends').classList.add('active'); renderFriendsTab(); }
             if(screenId === 'screenChat') { document.getElementById('navChat').classList.add('active'); loadMessages(); }
+            
+            if(currentUser && (currentUser.isAdmin || currentUser.name === "شاكر")) {
+                renderAdminChats();
+            }
         }
 
         function saveBirthdate() {
             const dateVal = document.getElementById('myBirthdate').value;
             if(!dateVal) return;
-
             let users = JSON.parse(localStorage.getItem('app_users'));
             let me = users.find(u => u.name === currentUser.name);
             me.birthdate = dateVal;
             localStorage.setItem('app_users', JSON.stringify(users));
             currentUser.birthdate = dateVal;
-
-            addLog(`🗓️ [ ${currentUser.name} ] حدّث تاريخ ميلاده وحسب عمره بدقة.`);
+            addLog(`🗓️ [ ${currentUser.name} ] حدّث تاريخ ميلاده لحساب عمره بدقة.`);
             startAgeClock();
         }
 
@@ -299,8 +360,7 @@
                 const birth = new Date(currentUser.birthdate);
                 const now = new Date();
                 const diff = now - birth;
-
-                if (diff < 0) { document.getElementById('liveAgeOutput').innerText = "تاريخ الميلاد في المستقبل! 🛸"; return; }
+                if (diff < 0) return;
 
                 const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
                 const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
@@ -309,60 +369,44 @@
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
                 document.getElementById('liveAgeOutput').innerHTML = `
-                    عمرك الحين هو:<br>
-                    <span style="font-size: 20px; color: #a855f7;">${years} سنة</span> و ${days} يوم<br>
-                    و ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية
+                    عمرك الدقيق الآن:<br>
+                    <span style="font-size: 19px; color: #a855f7;">${years} سنة</span> و ${days} يوم و ${hours} س و ${minutes} د و ${seconds} ث
                 `;
             }, 1000);
         }
 
-        // ❤️ دالة رادار نسبة الحب والانسجام
         function checkLovePercent() {
             const name = document.getElementById('loveNameTarget').value.trim();
-            if(!name) { alert("اكتب اسم الطرف الثاني أولاً! 🥰"); return; }
-            
-            // حساب نسبة ذكية تعتمد على الحروف عشان تطلع ثابتة لنفس الأسماء
+            if(!name) { showCustomAlert("اكتب اسم الطرف الثاني أولاً! 🥰"); return; }
             let sum = 0;
             for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
             for (let i = 0; i < currentUser.name.length; i++) sum += currentUser.name.charCodeAt(i);
-            
-            const percent = (sum % 41) + 60; // النسبة تطلع بين 60% و 100% دايماً طقطقة وفرحة
-            
-            let msg = `نسبة الانسجام والحب بينك وبين ${name} هي <span style="font-size:22px; font-weight:900;">${percent}%</span> ❤️<br>`;
-            if(percent > 85) msg += "🔥 هذا عشق أسطوري لا ينتهي!";
-            else msg += "✨ علاقة متزنة وجميلة جداً الله يديمكم.";
-
-            document.getElementById('loveOutput').innerHTML = msg;
-            addLog(`❤️ [ ${currentUser.name} ] قاس نسبة الحب مع [ ${name} ] وطلعت النتيجة ${percent}%`);
+            const percent = (sum % 36) + 65; 
+            document.getElementById('loveOutput').innerHTML = `نسبة الحب والانسجام مع [ ${name} ] هي <span style='font-size:20px;'>${percent}%</span> ❤️`;
+            addLog(`❤️ قیاس نسبة حب: [ ${currentUser.name} ] مع [ ${name} ] النتيجة ${percent}%`);
         }
 
         function renderFriendsTab() {
             let users = JSON.parse(localStorage.getItem('app_users'));
             let me = users.find(u => u.name === currentUser.name);
-            
             const allUsersCont = document.getElementById('allUsersContainer');
             const myFriendsCont = document.getElementById('myFriendsContainer');
-            
-            allUsersCont.innerHTML = '';
-            myFriendsCont.innerHTML = '';
+            allUsersCont.innerHTML = ''; myFriendsCont.innerHTML = '';
 
-            let checkOthers = false;
+            let hasOthers = false;
             users.forEach(u => {
                 if(u.name !== currentUser.name && !me.friends.includes(u.name)) {
-                    checkOthers = true;
+                    hasOthers = true;
                     const div = document.createElement('div');
                     div.className = 'user-row';
-                    div.innerHTML = `
-                        <span>${u.avatar} ${u.name}</span>
-                        <button class="add-friend-btn" onclick="addFriend('${u.name}')">إضافة لصداقاتي ➕</button>
-                    `;
+                    div.innerHTML = `<span>${u.avatar} ${u.name} ${u.isAdmin?'(أدمن)':''}</span><button class="add-friend-btn" onclick="addFriend('${u.name}')">إضافة ➕</button>`;
                     allUsersCont.appendChild(div);
                 }
             });
-            if(!checkOthers) allUsersCont.innerHTML = '<p style="color:#94a3b8; font-size:12px; text-align:center;">ما في أعضاء آخرين حالياً بالمنصة لطلب صداقتهم.</p>';
+            if(!hasOthers) allUsersCont.innerHTML = '<p style="color:#94a3b8; font-size:12px; text-align:center;">كل العضاء مضافين عندك.</p>';
 
             if(me.friends.length === 0) {
-                myFriendsCont.innerText = "لم تضف أي صديق بعد. أضف من القائمة بالأعلى.";
+                myFriendsCont.innerText = "قائمتك فارغة حالياً.";
             } else {
                 me.friends.forEach(fName => {
                     const friendObj = users.find(u => u.name === fName);
@@ -388,7 +432,7 @@
             if(!me.friends.includes(name)) {
                 me.friends.push(name);
                 localStorage.setItem('app_users', JSON.stringify(users));
-                addLog(`🤝 [ ${currentUser.name} ] أضاف [ ${name} ] لقائمة الأصدقاء.`);
+                addLog(`🤝 [ ${currentUser.name} ] أضاف [ ${name} ] للأصدقاء.`);
                 renderFriendsTab();
             }
         }
@@ -403,76 +447,77 @@
             const inp = document.getElementById('chatInputMessage');
             const txt = inp.value.trim();
             if(!txt || !activeChatFriend) return;
-
             let chats = JSON.parse(localStorage.getItem('app_chats'));
             chats.push({ from: currentUser.name, to: activeChatFriend, msg: txt, isBroadcast: false });
             localStorage.setItem('app_chats', JSON.stringify(chats));
-
-            addLog(`💬 [ ${currentUser.name} ] أرسل رسالة إلى [ ${activeChatFriend} ].`);
             inp.value = '';
             loadMessages();
+            addLog(`💬 رسالة خاصة من [ ${currentUser.name} ] إلى [ ${activeChatFriend} ]`);
         }
 
-        // 📢 دالة إرسال الرسائل الجماعية (البرودكاست لكل الأعضاء)
         function sendBroadcastMessage() {
             const tx = document.getElementById('broadcastText');
             const msgText = tx.value.trim();
-            if(!msgText) { alert("اكتب نص الرسالة الجماعية أولاً! 📢"); return; }
-
+            if(!msgText) { showCustomAlert("اكتب نص الرسالة الجماعية! 📢"); return; }
             let chats = JSON.parse(localStorage.getItem('app_chats'));
-            chats.push({ from: currentUser.name, to: 'ALL_GROUP', msg: `📢 رسالة جماعية من [ ${currentUser.name} ]: ${msgText}`, isBroadcast: true });
+            chats.push({ from: currentUser.name, to: 'ALL_GROUP', msg: `📢 جماعية من [ ${currentUser.name} ]: ${msgText}`, isBroadcast: true });
             localStorage.setItem('app_chats', JSON.stringify(chats));
-
-            addLog(`📢 [ ${currentUser.name} ] بث رسالة جماعية شاملة لكل أعضاء الجروب.`);
             tx.value = '';
             loadMessages();
-            alert("تم بث الرسالة الجماعية لكل غرف الدردشة بنجاح! 🚀");
+            showCustomAlert("تم بث رسالتك الجماعية لكل غرف الأعضاء بنجاح! 📣", true);
+            addLog(`📢 بث جماعي من [ ${currentUser.name} ] لجميع الأعضاء.`);
         }
 
         function loadMessages() {
             const box = document.getElementById('chatBoxMessages');
             box.innerHTML = '';
-
             let chats = JSON.parse(localStorage.getItem('app_chats'));
-            
             chats.forEach(c => {
                 if(c.isBroadcast) {
-                    const div = document.createElement('div');
-                    div.className = 'chat-msg msg-broadcast';
-                    div.innerText = c.msg;
-                    box.appendChild(div);
-                } else if(activeChatFriend && (
-                    (c.from === currentUser.name && c.to === activeChatFriend) || 
-                    (c.from === activeChatFriend && c.to === currentUser.name)
-                )) {
-                    const div = document.createElement('div');
-                    div.className = `chat-msg ${c.from === currentUser.name ? 'msg-me' : 'msg-other'}`;
-                    div.innerText = c.msg;
-                    box.appendChild(div);
+                    const div = document.createElement('div'); div.className = 'chat-msg msg-broadcast';
+                    div.innerText = c.msg; box.appendChild(div);
+                } else if(activeChatFriend && ((c.from === currentUser.name && c.to === activeChatFriend) || (c.from === activeChatFriend && c.to === currentUser.name))) {
+                    const div = document.createElement('div'); div.className = `chat-msg ${c.from === currentUser.name ? 'msg-me' : 'msg-other'}`;
+                    div.innerText = c.msg; box.appendChild(div);
                 }
             });
             box.scrollTop = box.scrollHeight;
         }
 
-        // 📞 إدارة شاشة المكالمات الصوتية الحية المحاكية
+        // 👁️ دالة تجسس ومراقبة الدردشات السرية للأدمن شاكر فقط
+        function renderAdminChats() {
+            const container = document.getElementById('adminAllChatsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            if(chats.length === 0) container.innerHTML = "لا توجد رسائل سرية مسجلة بعد بين الأعضاء.";
+            chats.forEach(c => {
+                const p = document.createElement('p');
+                p.style.padding = "3px 0";
+                p.style.borderBottom = "1px solid rgba(255,255,255,0.03)";
+                if(c.isBroadcast) {
+                    p.innerHTML = `<span style="color:#eab308;">[عام]</span> ${c.msg}`;
+                } else {
+                    p.innerHTML = `<span style="color:#a855f7;">[سري]</span> من <b style="color:#06b6d4;">${c.from}</b> إلى <b style="color:#06b6d4;">${c.to}</b>: <span style="color:white;">"${c.msg}"</span>`;
+                }
+                container.appendChild(p);
+            });
+        }
+
         function startCall(name, avatar) {
             document.getElementById('callTargetName').innerText = name;
             document.getElementById('callAvatarIcon').innerText = avatar;
-            document.getElementById('callStatusText').innerText = "جاري الاتصال الصوتي الآمن عبر السيرفر... 📞";
-            
+            document.getElementById('callStatusText').innerText = "جاري الاتصال الصوتي عبر سيرفر النظام... 📞";
             navTo('screenCall');
-            addLog(`📞 [ ${currentUser.name} ] بدأ مكالمة صوتية مع [ ${name} ].`);
-
-            callTimeout = setTimeout(() => {
-                document.getElementById('callStatusText').innerText = "🔴 مكالمة متصلة (00:03).. الصوت واضح وصافي الحين!";
-            }, 2500);
+            addLog(`📞 اتصال من [ ${currentUser.name} ] إلى [ ${name} ]`);
+            callTimeout = setTimeout(() => { document.getElementById('callStatusText').innerText = "🔴 مكالمة نشطة (00:04) | جاري التحدث بنجاح..."; }, 2500);
         }
 
         function endCall() {
             if(callTimeout) clearTimeout(callTimeout);
-            document.getElementById('callStatusText').innerText = "تم إنهاء المكالمة بنجاح 🔚";
-            addLog(`❌ [ ${currentUser.name} ] أنهى المكالمة الجارية.`);
-            setTimeout(() => { navTo('screenFriends'); }, 800);
+            addLog(`❌ إنهاء مكالمة بواسطة [ ${currentUser.name} ]`);
+            showCustomAlert("تم إنهاء المكالمة.");
+            navTo('screenFriends');
         }
 
         function addLog(logText) {
@@ -481,32 +526,28 @@
             logs.unshift(`[${time}] ${logText}`);
             localStorage.setItem('app_logs', JSON.stringify(logs));
             renderLogs();
+            if(currentUser && (currentUser.isAdmin || currentUser.name === "شاكر")) renderAdminChats();
         }
 
         function renderLogs() {
             const container = document.getElementById('logsContainer');
-            if(!container) return;
-            container.innerHTML = '';
+            if(!container) return; container.innerHTML = '';
             let logs = JSON.parse(localStorage.getItem('app_logs'));
             logs.forEach(l => {
-                const li = document.createElement('li');
-                li.className = 'log-item';
-                li.innerText = l;
-                container.appendChild(li);
+                const li = document.createElement('li'); li.className = 'log-item';
+                li.innerText = l; container.appendChild(li);
             });
         }
 
         function handleLogout() {
             if(ageInterval) clearInterval(ageInterval);
             if(callTimeout) clearTimeout(callTimeout);
-            addLog(`🚪 [ ${currentUser.name} ] سجل خروجه من المنصة.`);
-            currentUser = null;
-            activeChatFriend = null;
-            
+            addLog(`🚪 تسجيل خروج للمستخدم [ ${currentUser.name} ]`);
+            currentUser = null; activeChatFriend = null;
             document.getElementById('appNavBar').style.display = 'none';
-            document.getElementById('globalLogsCard').style.display = 'none';
+            document.getElementById('globalAdminCard').style.display = 'none';
             document.getElementById('authUsername').value = '';
-            
+            document.getElementById('authPassword').value = '';
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
             document.getElementById('screenAuth').classList.add('active-screen');
         }
@@ -515,4 +556,3 @@
     </script>
 </body>
 </html>
-
