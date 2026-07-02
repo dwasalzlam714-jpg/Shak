@@ -95,6 +95,7 @@
 
     <div class="container">
         
+        <!-- 🔒 شاشة تسجيل الدخول -->
         <div id="screenAuth" class="screen active-screen">
             <div class="app-header" style="margin-top: 40px;">
                 <h1>🪐 بوابة الدخول الآمنة</h1>
@@ -103,6 +104,590 @@
             <div class="card">
                 <h2>🔐 الموافقة والتحقق من الهوية</h2>
                 <div class="input-group">
+                    <label>الاسم الحقيقي أو المعرف</label>
+                    <input type="text" id="authUsername" placeholder="مثال: شاكر">
+                </div>
+                <div class="input-group">
+                    <label>كلمة المرور السريّة</label>
+                    <input type="password" id="authPassword" placeholder="••••••••">
+                </div>
+                <div class="input-group">
+                    <label>أيجونة الحساب (Avatar)</label>
+                    <select id="authAvatar">
+                        <option value="👑">👑 الملك (الأدمن)</option>
+                        <option value="😎">😎 الكول</option>
+                        <option value="🥷">🥷 المخفي</option>
+                        <option value="🔥">🔥 الأسطورة</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="handleLogin()">تحقق وموافقة على الدخول 🚀</button>
+                <span class="forget-link" onclick="triggerForgetPassword()">نسيت كلمة المرور؟ اضغط هنا 🔑</span>
+            </div>
+        </div>
+
+        <!-- 👤 شاشة الحساب -->
+        <div id="screenProfile" class="screen">
+            <div class="app-header">
+                <h1>👤 ملفك التفاعلي</h1>
+            </div>
+            <div class="card">
+                <div class="profile-badge">
+                    <div class="avatar" id="myAvatarDisplay">😎</div>
+                    <div>
+                        <h3 id="myUsernameDisplay" style="color: white; font-size: 18px;">المستخدم</h3>
+                        <p id="userRoleBadge" style="color: #06b6d4; font-size: 12px;">عضو نشط ✨</p>
+                    </div>
+                </div>
+
+                <!-- 🔑 ميزة تغيير باسوردي الخاص للمستخدم الحالي أو الأدمن -->
+                <div style="background: rgba(255,255,255,0.03); border-radius:12px; padding:12px; border: 1px solid rgba(168, 85, 247, 0.2); margin-top:10px;">
+                    <h3 style="font-size:13px; color:#a855f7; margin-bottom:8px;">🔒 تغيير كلمة المرور الخاصة بي</h3>
+                    <div style="display:flex; gap:5px;">
+                        <input type="password" id="changeMyPasswordInput" placeholder="الباسورد الجديد" style="width:70%; padding:8px; background:rgba(0,0,0,0.5); border:1px solid #475569; border-radius:8px; color:white; text-align:center; font-size:13px;">
+                        <button class="btn" style="width:30%; margin-top:0; padding:8px; font-size:12px;" onclick="updateMyOwnPassword()">تحديث 💾</button>
+                    </div>
+                </div>
+                
+                <h2 style="margin-top:20px;">🗓️ حاسبة العمر الحيّة</h2>
+                <div class="input-group">
+                    <label>اختر تاريخ ميلادك بالتفصيل:</label>
+                    <input type="date" id="myBirthdate" onchange="saveBirthdate()">
+                </div>
+                <div class="age-live-box" id="liveAgeOutput">اختر تاريخ ميلادك لتفعيل العداد الحي...</div>
+            </div>
+
+            <!-- ❤️ نسبة الحب -->
+            <div class="card">
+                <h2>❤️ رادار الانسجام ونسبة الحب</h2>
+                <div class="input-group">
+                    <input type="text" id="loveNameTarget" placeholder="اكتب اسم شريك حياتك هنا">
+                </div>
+                <button class="btn" onclick="checkLovePercent()">احسب نسبة الانسجام الحين ⚡️</button>
+                <div class="age-live-box" id="loveOutput" style="background: rgba(236, 72, 153, 0.08); color: #ec4899;">اكتب الاسم واضغط على الزر لمعرفة النتيجة...</div>
+            </div>
+        </div>
+
+        <!-- 👥 شاشة الأصدقاء -->
+        <div id="screenFriends" class="screen">
+            <div class="app-header">
+                <h1>👥 جروب المنصة والمكالمات</h1>
+            </div>
+            <div class="card">
+                <h2>🔍 قائمة المستخدمين المسجلين بالمنصة</h2>
+                <div id="allUsersContainer"></div>
+            </div>
+            <div class="card">
+                <h2>✅ أصدقائي المقربين (اتصال سريع)</h2>
+                <div id="myFriendsContainer">لا يوجد أصدقاء مضافين حالياً.</div>
+            </div>
+        </div>
+
+        <!-- 💬 شاشة الدردشة -->
+        <div id="screenChat" class="screen">
+            <div class="app-header">
+                <h1>💬 غرف الدردشة والبرودكاست</h1>
+            </div>
+            
+            <div class="card" style="border: 1px solid #eab308; background: rgba(234, 179, 8, 0.03);">
+                <h2 style="color: #eab308;">📢 بث رسالة جماعية شاملة للكل</h2>
+                <div class="input-group">
+                    <textarea id="broadcastText" placeholder="اكتب رسالة برودكاست تروح لكل الغرف..."></textarea>
+                </div>
+                <button class="btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="sendBroadcastMessage()">بث الرسالة الجماعية 📣</button>
+            </div>
+
+            <div class="card">
+                <h2>🗣️ شات: <span id="chatWithTitle" style="color: #06b6d4;">اختر صديق أولاً</span></h2>
+                <div class="chat-box" id="chatBoxMessages"></div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="chatInputMessage" placeholder="اكتب رسالتك...">
+                    <button class="btn" style="width: auto; padding: 0 20px; margin-top: 0;" onclick="sendMessage()">إرسال</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📞 شاشة المكالمات -->
+        <div id="screenCall" class="screen">
+            <div class="container" style="text-align: center; padding-top: 40px;">
+                <div class="card" style="padding: 40px 20px;">
+                    <div id="callAvatarIcon" style="font-size: 60px; margin-bottom: 20px;">👤</div>
+                    <h2 id="callTargetName" style="justify-content: center; border: none; font-size: 24px;">خويك</h2>
+                    <p id="callStatusText" style="color: #67e8f9; margin: 20px 0;">جاري الاتصال...</p>
+                    <button class="hangup-btn" style="background:#ef4444; width:60px; height:60px; border-radius:50%; border:none; color:white; font-size:22px;" onclick="endCall()">❌</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👁️ لوحة تحكم الأدمن والتحكم الكامل في الحسابات والأعضاء (خاصة بـ شاكر فقط) -->
+        <div id="globalAdminCard" class="card admin-box" style="display: none;">
+            <h2 style="color: #ef4444; border-bottom-color: rgba(239,68,68,0.2); font-weight: 900;">👁️ لوحة تحكم الإدارة الشاملة (خاصة بـ شاكر)</h2>
+            
+            <!-- ➕ قسم إضافة عضو جديد يدوياً بواسطة الأدمن -->
+            <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:12px; margin-bottom:15px; border:1px dashed #ef4444;">
+                <h3 style="font-size:13px; color:#06b6d4; margin-bottom:8px;">➕ إضافة عضو جديد للنظام يدوياً:</h3>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    <input type="text" id="adminNewUserName" placeholder="اسم العضو الجديد" style="padding:8px; background:rgba(0,0,0,0.5); border:1px solid #475569; border-radius:8px; color:white; text-align:center; font-size:12px;">
+                    <input type="text" id="adminNewUserPass" placeholder="كلمة المرور الخاصة به" style="padding:8px; background:rgba(0,0,0,0.5); border:1px solid #475569; border-radius:8px; color:white; text-align:center; font-size:12px;">
+                    <button class="btn" style="padding:6px; font-size:12px; background:linear-gradient(90deg, #10b981, #059669);" onclick="adminCreateUser()">تثبيت العضو الجديد وإضافته 📂</button>
+                </div>
+            </div>
+
+            <!-- 📋 تعديل وحذف وإدارة الباسوردات للمسجلين -->
+            <h3 style="font-size:13px; color:#ef4444; margin-bottom:5px;">⚙️ التحكم بالحسابات (تغيير باسورد / حذف):</h3>
+            <div id="adminUsersManagementContainer" style="margin-bottom:15px; max-height:200px; overflow-y:auto;"></div>
+            
+            <h3 style="font-size:13px; color:#a855f7; margin-bottom:5px;">📋 سجل الأحداث والموافقات:</h3>
+            <ul class="log-list" id="logsContainer" style="margin-bottom:15px;"></ul>
+
+            <h3 style="font-size:13px; color:#06b6d4; margin-bottom:5px;">💬 أرشيف ومراقبة كل محادثات الجروب:</h3>
+            <div class="log-list" id="adminAllChatsContainer" style="max-height: 180px; overflow-y: auto; color:#cbd5e1; font-size:11px; line-height:1.6;"></div>
+        </div>
+
+        <!-- 🗺️ شريط التنقل السفلي -->
+        <div class="nav-bar" id="appNavBar" style="display: none;">
+            <div class="nav-item active" id="navProfile" onclick="navTo('screenProfile')">👤 الحساب</div>
+            <div class="nav-item" id="navFriends" onclick="navTo('screenFriends')">👥 الأصدقاء</div>
+            <div class="nav-item" id="navChat" onclick="navTo('screenChat')">💬 الدردشة</div>
+            <div class="nav-item" style="color: #ef4444;" onclick="handleLogout()">🚪 خروج</div>
+        </div>
+
+    </div>
+
+    <script>
+        // دالة لفحص البيانات والتأكد من توافق البنية البرمجية الجديدة بالكامل لمنع أي كراش
+        function initStorage() {
+            let defaultUsers = [
+                { name: "شاكر", password: "123", avatar: "👑", birthdate: "2000-01-01", friends: [], isAdmin: true },
+                { name: "أحمد", password: "111", avatar: "😎", birthdate: "1998-05-12", friends: [] }
+            ];
+            
+            let currentUsers = localStorage.getItem('app_users');
+            if(!currentUsers) {
+                localStorage.setItem('app_users', JSON.stringify(defaultUsers));
+            } else {
+                // للتأكد من أن شاكر يملك حقل الصلاحية دائمًا
+                try {
+                    let parsed = JSON.parse(currentUsers);
+                    let hasAdmin = parsed.some(u => u.name === "شاكر" && u.isAdmin);
+                    if(!hasAdmin) {
+                        localStorage.setItem('app_users', JSON.stringify(defaultUsers));
+                    }
+                } catch(e) {
+                    localStorage.setItem('app_users', JSON.stringify(defaultUsers));
+                }
+            }
+
+            if(!localStorage.getItem('app_chats')) {
+                localStorage.setItem('app_chats', JSON.stringify([]));
+            }
+            if(!localStorage.getItem('app_logs')) {
+                localStorage.setItem('app_logs', JSON.stringify(["النظام الأمني جاهز وتم تفعيل جدار الحماية 🛡️"]));
+            }
+        }
+        
+        initStorage();
+
+        let currentUser = null;
+        let activeChatFriend = null;
+        let ageInterval = null;
+        let callTimeout = null;
+
+        function showCustomAlert(message, isSuccess = false) {
+            const alertBox = document.getElementById('popupAlert');
+            alertBox.innerText = message;
+            alertBox.style.background = isSuccess ? 'rgba(16, 185, 129, 0.95)' : 'rgba(239, 68, 68, 0.95)';
+            alertBox.style.borderColor = isSuccess ? '#10b981' : '#ef4444';
+            alertBox.style.boxShadow = isSuccess ? '0 10px 25px rgba(16, 185, 129, 0.4)' : '0 10px 25px rgba(239, 68, 68, 0.4)';
+            alertBox.classList.add('show');
+            setTimeout(() => { alertBox.classList.remove('show'); }, 3000);
+        }
+
+        function triggerForgetPassword() {
+            showCustomAlert("🔑 تم إرسال طلب تصفير الباسورد للـ المطور الرئيسي شاكر بنجاح.");
+            addLog("⚠️ أحدهم ضغط على 'نسيت كلمة المرور' وبانتظار موافقتك.");
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('authUsername').value.trim();
+            const pass = document.getElementById('authPassword').value.trim();
+            const avatar = document.getElementById('authAvatar').value;
+
+            if(!username || !pass) { showCustomAlert("يا صاحبي لازم تكتب الاسم والباسورد معاً للموافقة! 🔐"); return; }
+
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let userObj = users.find(u => u.name.toLowerCase() === username.toLowerCase());
+
+            if(!userObj) {
+                userObj = { name: username, password: pass, avatar: avatar, birthdate: "", friends: [], isAdmin: (username.toLowerCase() === "شاكر") };
+                users.push(userObj);
+                localStorage.setItem('app_users', JSON.stringify(users));
+                addLog(`👤 عضوية جديدة: تم تسجيل [ ${username} ] وباسورده الخاص بنجاح.`);
+            } else {
+                if(userObj.password !== pass) {
+                    showCustomAlert("❌ كلمة المرور غير مطابقة للاسم المسجل سابقاً!");
+                    return;
+                }
+                addLog(`🔓 تم منح الموافقة لدخول: [ ${username} ].`);
+            }
+
+            currentUser = userObj;
+            
+            document.getElementById('myUsernameDisplay').innerText = currentUser.name;
+            document.getElementById('myAvatarDisplay').innerText = currentUser.avatar;
+            document.getElementById('userRoleBadge').innerText = (currentUser.name.toLowerCase() === "شاكر" || currentUser.isAdmin) ? "👑 الأدمن العام للمنصة" : "عضو نشط بالمنصة ✨";
+
+            if(currentUser.birthdate) {
+                document.getElementById('myBirthdate').value = currentUser.birthdate;
+                startAgeClock();
+            }
+
+            document.getElementById('screenAuth').classList.remove('active-screen');
+            document.getElementById('appNavBar').style.display = 'flex';
+            
+            if(currentUser.name.toLowerCase() === "شاكر" || currentUser.isAdmin) {
+                document.getElementById('globalAdminCard').style.display = 'block';
+                renderAdminUsersManagement();
+                renderAdminChats();
+            } else {
+                document.getElementById('globalAdminCard').style.display = 'none';
+            }
+            
+            navTo('screenProfile');
+            renderFriendsTab();
+        }
+
+        function updateMyOwnPassword() {
+            const newPass = document.getElementById('changeMyPasswordInput').value.trim();
+            if(!newPass) { showCustomAlert("يرجى كتابة كلمة المرور الجديدة أولاً!"); return; }
+            
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            if(me) {
+                me.password = newPass;
+                currentUser.password = newPass;
+                localStorage.setItem('app_users', JSON.stringify(users));
+                document.getElementById('changeMyPasswordInput').value = '';
+                showCustomAlert("🎉 تم تحديث كلمة مرورك الخاصة بنجاح!", true);
+                addLog(`🔒 [ ${currentUser.name} ] قام بتغيير باسورده الخاص.`);
+                if(currentUser.name.toLowerCase() === "شاكر" || currentUser.isAdmin) renderAdminUsersManagement();
+            }
+        }
+
+        // 🛠️ دوال الإدارة والتحكم الكامل (إضافة / تعديل / حذف) بواسطة شاكر الأدمن
+        function adminCreateUser() {
+            const name = document.getElementById('adminNewUserName').value.trim();
+            const pass = document.getElementById('adminNewUserPass').value.trim();
+            if(!name || !pass) { showCustomAlert("اكتب اسم وباسورد الحساب الجديد!"); return; }
+
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            if(users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+                showCustomAlert("هذا الاسم مسجل وموجود مسبقاً بالنظام!"); return;
+            }
+
+            users.push({ name: name, password: pass, avatar: "😎", birthdate: "", friends: [], isAdmin: false });
+            localStorage.setItem('app_users', JSON.stringify(users));
+            
+            document.getElementById('adminNewUserName').value = '';
+            document.getElementById('adminNewUserPass').value = '';
+            showCustomAlert(`تم إنشاء حساب العضو [ ${name} ] بنجاح! 📂`, true);
+            addLog(`➕ الأدمن شاكر أنشأ حساباً جديداً يدوياً لـ [ ${name} ].`);
+            
+            renderAdminUsersManagement();
+            renderFriendsTab();
+        }
+
+        function adminChangeUserPassword(name) {
+            const inputId = `adminPassInput_${name}`;
+            const newPass = document.getElementById(inputId).value.trim();
+            if(!newPass) { showCustomAlert("اكتب الباسورد الجديد لتعديله!"); return; }
+
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let user = users.find(u => u.name === name);
+            if(user) {
+                user.password = newPass;
+                localStorage.setItem('app_users', JSON.stringify(users));
+                showCustomAlert(`تم تغيير باسورد العضو [ ${name} ] بنجاح! 🔐`, true);
+                addLog(`🛠️ الأدمن شاكر عدّل كلمة مرور الحساب [ ${name} ].`);
+                renderAdminUsersManagement();
+            }
+        }
+
+        function adminDeleteUser(name) {
+            if(name.toLowerCase() === "شاكر") { showCustomAlert("لا يمكنك حذف نفسك كأدمن رئيسي! ❌"); return; }
+            if(!confirm(`هل أنت متأكد تماماً من طرد وحذف العضو [ ${name} ] من المنصة؟`)) return;
+
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            users = users.filter(u => u.name !== name);
+            localStorage.setItem('app_users', JSON.stringify(users));
+            
+            showCustomAlert(`تم حذف وطرد العضو [ ${name} ] من السيرفر نهائياً.`, true);
+            addLog(`❌ الأدمن شاكر حذف وطرد حساب [ ${name} ] نهائياً.`);
+            
+            renderAdminUsersManagement();
+            renderFriendsTab();
+        }
+
+        function renderAdminUsersManagement() {
+            const container = document.getElementById('adminUsersManagementContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            let users = JSON.parse(localStorage.getItem('app_users'));
+
+            users.forEach(u => {
+                const div = document.createElement('div');
+                div.className = 'admin-user-card';
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:12px;">
+                        <span>👤 <b>${u.name}</b> ${u.name.toLowerCase()==='شاكر'?'<span style="color:#ef4444;">(أنت)</span>':''}</span>
+                        <span style="color:#cbd5e1;">🔑 الباسورد الحالي: <b style="color:#06b6d4;">${u.password}</b></span>
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <input type="text" id="adminPassInput_${u.name}" placeholder="باسورد جديد" style="flex:1; padding:5px; font-size:11px; text-align:center; background:rgba(0,0,0,0.4); border:1px solid #475569; border-radius:6px; color:white;">
+                        <button onclick="adminChangeUserPassword('${u.name}')" style="background:#a855f7; border:none; padding:4px 8px; border-radius:6px; color:white; font-size:11px; cursor:pointer;">تعديل ⚙️</button>
+                        <button onclick="adminDeleteUser('${u.name}')" style="background:#ef4444; border:none; padding:4px 8px; border-radius:6px; color:white; font-size:11px; cursor:pointer;">حذف ❌</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active-screen');
+            
+            if(screenId === 'screenProfile') document.getElementById('navProfile').classList.add('active');
+            if(screenId === 'screenFriends') { document.getElementById('navFriends').classList.add('active'); renderFriendsTab(); }
+            if(screenId === 'screenChat') { document.getElementById('navChat').classList.add('active'); loadMessages(); }
+            
+            if(currentUser && (currentUser.name.toLowerCase() === "شاكر" || currentUser.isAdmin)) {
+                renderAdminUsersManagement();
+                renderAdminChats();
+            }
+        }
+
+        function saveBirthdate() {
+            const dateVal = document.getElementById('myBirthdate').value;
+            if(!dateVal) return;
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            me.birthdate = dateVal;
+            localStorage.setItem('app_users', JSON.stringify(users));
+            currentUser.birthdate = dateVal;
+            addLog(`🗓️ [ ${currentUser.name} ] حدّث تاريخ ميلاده لحساب عمره بدقة.`);
+            startAgeClock();
+        }
+
+        function startAgeClock() {
+            if(ageInterval) clearInterval(ageInterval);
+            ageInterval = setInterval(() => {
+                if(!currentUser || !currentUser.birthdate) return;
+                const birth = new Date(currentUser.birthdate);
+                const now = new Date();
+                const diff = now - birth;
+                if (diff < 0) return;
+
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('liveAgeOutput').innerHTML = `
+                    عمرك الدقيق الآن:<br>
+                    <span style="font-size: 19px; color: #a855f7;">${years} سنة</span> و ${days} يوم و ${hours} س و ${minutes} د و ${seconds} ث
+                `;
+            }, 1000);
+        }
+
+        function checkLovePercent() {
+            const name = document.getElementById('loveNameTarget').value.trim();
+            if(!name) { showCustomAlert("اكتب اسم الطرف الثاني أولاً! 🥰"); return; }
+            let sum = 0;
+            for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+            for (let i = 0; i < currentUser.name.length; i++) sum += currentUser.name.charCodeAt(i);
+            const percent = (sum % 36) + 65; 
+            document.getElementById('loveOutput').innerHTML = `نسبة الحب والانسجام مع [ ${name} ] هي <span style='font-size:20px;'>${percent}%</span> ❤️`;
+            addLog(`❤️ قیاس نسبة حب: [ ${currentUser.name} ] مع [ ${name} ] النتيجة ${percent}%`);
+        }
+
+        function renderFriendsTab() {
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            if(!me) return;
+            const allUsersCont = document.getElementById('allUsersContainer');
+            const myFriendsCont = document.getElementById('myFriendsContainer');
+            allUsersCont.innerHTML = ''; myFriendsCont.innerHTML = '';
+
+            // تهيئة مصفوفة الأصدقاء لو لم تكن موجودة
+            if(!me.friends) me.friends = [];
+
+            let hasOthers = false;
+            users.forEach(u => {
+                if(u.name !== currentUser.name && !me.friends.includes(u.name)) {
+                    hasOthers = true;
+                    const div = document.createElement('div');
+                    div.className = 'user-row';
+                    div.innerHTML = `<span>${u.avatar || '😎'} ${u.name} ${u.name.toLowerCase()==='شاكر'?'(أدمن)':''}</span><button class="add-friend-btn" onclick="addFriend('${u.name}')">إضافة ➕</button>`;
+                    allUsersCont.appendChild(div);
+                }
+            });
+            if(!hasOthers) allUsersCont.innerHTML = '<p style="color:#94a3b8; font-size:12px; text-align:center;">كل الأعضاء مضافين عندك.</p>';
+
+            if(me.friends.length === 0) {
+                myFriendsCont.innerText = "قائمتك فارغة حالياً.";
+            } else {
+                me.friends.forEach(fName => {
+                    const friendObj = users.find(u => u.name === fName);
+                    if(friendObj) {
+                        const div = document.createElement('div');
+                        div.className = 'user-row';
+                        div.innerHTML = `
+                            <span>${friendObj.avatar || '😎'} ${friendObj.name}</span>
+                            <div style="display:flex; gap:5px;">
+                                <button class="add-friend-btn" style="background:#a855f7;" onclick="openChat('${friendObj.name}')">شات 💬</button>
+                                <button class="add-friend-btn" style="background:#10b981;" onclick="startCall('${friendObj.name}', '${friendObj.avatar || '😎'}')">اتصال 📞</button>
+                            </div>
+                        `;
+                        myFriendsCont.appendChild(div);
+                    }
+                });
+            }
+        }
+
+        function addFriend(name) {
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            if(!me.friends) me.friends = [];
+            if(!me.friends.includes(name)) {
+                me.friends.push(name);
+                localStorage.setItem('app_users', JSON.stringify(users));
+                addLog(`🤝 [ ${currentUser.name} ] أضاف [ ${name} ] للأصدقاء.`);
+                renderFriendsTab();
+            }
+        }
+
+        function openChat(friendName) {
+            activeChatFriend = friendName;
+            document.getElementById('chatWithTitle').innerText = friendName;
+            navTo('screenChat');
+        }
+
+        function sendMessage() {
+            const inp = document.getElementById('chatInputMessage');
+            const txt = inp.value.trim();
+            if(!txt || !activeChatFriend) return;
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            chats.push({ from: currentUser.name, to: activeChatFriend, msg: txt, isBroadcast: false });
+            localStorage.setItem('app_chats', JSON.stringify(chats));
+            inp.value = '';
+            loadMessages();
+            addLog(`💬 رسالة خاصة من [ ${currentUser.name} ] إلى [ ${activeChatFriend} ]`);
+        }
+
+        function sendBroadcastMessage() {
+            const tx = document.getElementById('broadcastText');
+            const msgText = tx.value.trim();
+            if(!msgText) { showCustomAlert("اكتب نص الرسالة الجماعية! 📢"); return; }
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            chats.push({ from: currentUser.name, to: 'ALL_GROUP', msg: `📢 جماعية من [ ${currentUser.name} ]: ${msgText}`, isBroadcast: true });
+            localStorage.setItem('app_chats', JSON.stringify(chats));
+            tx.value = '';
+            loadMessages();
+            showCustomAlert("تم بث رسالتك الجماعية لكل غرف الأعضاء بنجاح! 📣", true);
+            addLog(`📢 بث جماعي من [ ${currentUser.name} ] لجميع الأعضاء.`);
+        }
+
+        function loadMessages() {
+            const box = document.getElementById('chatBoxMessages');
+            box.innerHTML = '';
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            chats.forEach(c => {
+                if(c.isBroadcast) {
+                    const div = document.createElement('div'); div.className = 'chat-msg msg-broadcast';
+                    div.innerText = c.msg; box.appendChild(div);
+                } else if(activeChatFriend && ((c.from === currentUser.name && c.to === activeChatFriend) || (c.from === activeChatFriend && c.to === currentUser.name))) {
+                    const div = document.createElement('div'); div.className = `chat-msg ${c.from === currentUser.name ? 'msg-me' : 'msg-other'}`;
+                    div.innerText = c.msg; box.appendChild(div);
+                }
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function renderAdminChats() {
+            const container = document.getElementById('adminAllChatsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            if(chats.length === 0) container.innerHTML = "لا توجد رسائل سرية مسجلة بعد بين الأعضاء.";
+            chats.forEach(c => {
+                const p = document.createElement('p');
+                p.style.padding = "3px 0";
+                p.style.borderBottom = "1px solid rgba(255,255,255,0.03)";
+                if(c.isBroadcast) {
+                    p.innerHTML = `<span style="color:#eab308;">[عام]</span> ${c.msg}`;
+                } else {
+                    p.innerHTML = `<span style="color:#a855f7;">[سري]</span> من <b style="color:#06b6d4;">${c.from}</b> إلى <b style="color:#06b6d4;">${c.to}</b>: <span style="color:white;">"${c.msg}"</span>`;
+                }
+                container.appendChild(p);
+            });
+        }
+
+        function startCall(name, avatar) {
+            document.getElementById('callTargetName').innerText = name;
+            document.getElementById('callAvatarIcon').innerText = avatar;
+            document.getElementById('callStatusText').innerText = "جاري الاتصال الصوتي عبر سيرفر النظام... 📞";
+            navTo('screenCall');
+            addLog(`📞 اتصال من [ ${currentUser.name} ] إلى [ ${name} ]`);
+            callTimeout = setTimeout(() => { document.getElementById('callStatusText').innerText = "🔴 مكالمة نشطة (00:04) | جاري التحدث بنجاح..."; }, 2500);
+        }
+
+        function endCall() {
+            if(callTimeout) clearTimeout(callTimeout);
+            addLog(`❌ إنهاء مكالمة بواسطة [ ${currentUser.name} ]`);
+            showCustomAlert("تم إنهاء المكالمة.");
+            navTo('screenFriends');
+        }
+
+        function addLog(logText) {
+            let logs = JSON.parse(localStorage.getItem('app_logs')) || [];
+            const time = new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'});
+            logs.unshift(`[${time}] ${logText}`);
+            localStorage.setItem('app_logs', JSON.stringify(logs));
+            renderLogs();
+            if(currentUser && (currentUser.name.toLowerCase() === "شاكر" || currentUser.isAdmin)) {
+                renderAdminUsersManagement();
+                renderAdminChats();
+            }
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logsContainer');
+            if(!container) return; container.innerHTML = '';
+            let logs = JSON.parse(localStorage.getItem('app_logs'));
+            logs.forEach(l => {
+                const li = document.createElement('li'); li.className = 'log-item';
+                li.innerText = l; container.appendChild(li);
+            });
+        }
+
+        function handleLogout() {
+            if(ageInterval) clearInterval(ageInterval);
+            if(callTimeout) clearTimeout(callTimeout);
+            addLog(`🚪 تسجيل خروج للمستخدم [ ${currentUser.name} ]`);
+            currentUser = null; activeChatFriend = null;
+            document.getElementById('appNavBar').style.display = 'none';
+            document.getElementById('globalAdminCard').style.display = 'none';
+            document.getElementById('authUsername').value = '';
+            document.getElementById('authPassword').value = '';
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('screenAuth').classList.add('active-screen');
+        }
+
+        renderLogs();
+    </script>
+</body>
+</html>
                     <label>الاسم الحقيقي أو المعرف</label>
                     <input type="text" id="authUsername" placeholder="مثال: شاكر">
                 </div>
