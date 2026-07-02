@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة ذكريات الشعب التفاعلية 🪐</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background: #05020c; color: white; padding: 10px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative;
+        }
+
+        /* 🎆 النيون السحري اللانهائي في الخلفية */
+        body::before, body::after {
+            content: ''; position: absolute; width: 350px; height: 350px; border-radius: 50%; pointer-events: none; z-index: 1;
+        }
+        body::before { background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%); top: 5%; left: -80px; animation: pulseGlow 8s infinite alternate ease-in-out; }
+        body::after { background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%); bottom: 10%; right: -80px; animation: pulseGlow 12s infinite alternate ease-in-out; }
+        @keyframes pulseGlow { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.3); } }
+
+        .container { width: 100%; max-width: 480px; z-index: 10; padding-bottom: 80px; }
+
+        /* الشاشات الرئيسية */
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .active-screen { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* الكروت والتصميم الاحترافي */
+        .card {
+            background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 22px; margin-bottom: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+        }
+        .card h2 { font-size: 18px; color: #06b6d4; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(6,182,212,0.15); padding-bottom: 8px; }
+
+        /* المدخلات والأزرار */
+        .input-group { margin-bottom: 14px; text-align: right; }
+        .input-group label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid #475569; border-radius: 12px; color: white; outline: none; font-size: 14px; text-align: center;
+        }
+        .input-group textarea { text-align: right; resize: none; height: 80px; }
+        .input-group input:focus, .input-group textarea:focus { border-color: #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
+        
+        .btn {
+            width: 100%; padding: 12px; background: linear-gradient(90deg, #a855f7, #06b6d4);
+            border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 5px;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        /* الهيدر وشريط التنقل السفلي */
+        .app-header { text-align: center; margin: 15px 0 25px 0; }
+        .app-header h1 { font-size: 24px; font-weight: 900; color: #a855f7; text-shadow: 0 0 15px rgba(168,85,247,0.3); }
+
+        .nav-bar {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .nav-item { color: #94a3b8; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item.active { color: #06b6d4; }
+
+        /* بروفايل وحاسبة العمر */
+        .profile-badge { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; background: #a855f7; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2px solid #06b6d4; }
+        .age-live-box { background: rgba(6, 182, 212, 0.1); padding: 12px; border-radius: 12px; font-weight: bold; color: #06b6d4; text-align: center; font-size: 14px; line-height: 1.8; margin-top: 10px; }
+
+        /* قائمة الأصدقاء والشات */
+        .user-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 10px 15px; border-radius: 12px; margin-bottom: 8px; }
+        .add-friend-btn { background: #06b6d4; border: none; padding: 5px 12px; border-radius: 8px; color: white; font-size: 12px; font-weight: bold; cursor: pointer; }
+        
+        .chat-box { height: 180px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; position: relative; }
+        .msg-me { background: #a855f7; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg-other { background: #334155; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .msg-broadcast { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; align-self: center; text-align: center; color: #fef08a; border-radius: 10px; width: 100%; max-width: 100%; }
+
+        /* شاشة المكالمات الرهيبة */
+        .call-interface { display: none; text-align: center; padding: 30px 10px; animation: pulseCall 2s infinite alternate; }
+        @keyframes pulseCall { from { background: rgba(6, 182, 212, 0.05); } to { background: rgba(168, 85, 247, 0.1); } }
+        .call-avatar { width: 100px; height: 100px; border-radius: 50%; background: #06b6d4; font-size: 45px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 0 25px #06b6d4; }
+        .call-status { color: #67e8f9; font-size: 14px; margin-bottom: 30px; font-weight: bold; }
+        .hangup-btn { background: #ef4444; color: white; width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(239,68,68,0.4); }
+
+        /* السجلات */
+        .log-list { max-height: 120px; overflow-y: auto; list-style: none; font-size: 12px; color: #fca5a5; }
+        .log-item { padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- 🔒 شاشة الترحيب والتسجيل الفوري -->
+        <div id="screenAuth" class="screen active-screen">
+            <div class="app-header" style="margin-top: 50px;">
+                <h1>🪐 بوابة مجتمعنا التفاعلي</h1>
+                <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">ادخل اسمك الحين وطير مع العيال فوراً</p>
+            </div>
+            <div class="card">
+                <h2>📝 تسجيل دخول / حساب جديد</h2>
+                <div class="input-group">
+                    <label>اسم المستخدم (خويك بيعرفك به)</label>
+                    <input type="text" id="authUsername" placeholder="اكتب اسمك الحقيقي أو لقبك">
+                </div>
+                <div class="input-group">
+                    <label>اختر أي رمز لملفك الشخصي</label>
+                    <select id="authAvatar">
+                        <option value="👑">👑 الملك</option>
+                        <option value="😎">😎 الكول</option>
+                        <option value="🥷">🥷 المخفي</option>
+                        <option value="🎯">🎯 القناص</option>
+                        <option value="🔥">🔥 الأسطورة</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="handleLogin()">ابدأ الأكشن الآن 🚀</button>
+            </div>
+        </div>
+
+        <!-- 📱 شاشة الملف الشخصي وحاسبة العمر -->
+        <div id="screenProfile" class="screen">
+            <div class="app-header">
+                <h1>👤 ملفك الشخصي والأدوات</h1>
+            </div>
+            <div class="card">
+                <div class="profile-badge">
+                    <div class="avatar" id="myAvatarDisplay">😎</div>
+                    <div>
+                        <h3 id="myUsernameDisplay" style="color: white; font-size: 18px;">المستخدم</h3>
+                        <p style="color: #94a3b8; font-size: 12px;">عضو نشط بالمنصة ✨</p>
+                    </div>
+                </div>
+                
+                <h2 style="font-size: 15px; margin-top: 20px;">🗓️ حاسبة العمر الحيّة</h2>
+                <div class="input-group">
+                    <label>اختر تاريخ ميلادك بالتفصيل:</label>
+                    <input type="date" id="myBirthdate" onchange="saveBirthdate()">
+                </div>
+                <div class="age-live-box" id="liveAgeOutput">اختر تاريخ ميلادك لتفعيل العداد الحي...</div>
+            </div>
+
+            <!-- ❤️ أداة نسبة الحب الرهيبة المضافة -->
+            <div class="card">
+                <h2>❤️ رادار الحب والانسجام الفوري</h2>
+                <div class="input-group">
+                    <input type="text" id="loveNameTarget" placeholder="اكتب اسم حبيبتك أو الشريك هنا">
+                </div>
+                <button class="btn" onclick="checkLovePercent()">احسب نسبة الانسجام الحين ⚡️</button>
+                <div class="age-live-box" id="loveOutput" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">اكتب الاسم واضغط على الزر لمعرفة النتيجة...</div>
+            </div>
+        </div>
+
+        <!-- 👥 شاشة الأصدقاء والبحث عنهم -->
+        <div id="screenFriends" class="screen">
+            <div class="app-header">
+                <h1>👥 أصدقاء الجروب والمكالمات</h1>
+            </div>
+            <div class="card">
+                <h2>🔍 أضف أصدقاء جدد للـقائمة</h2>
+                <div id="allUsersContainer"></div>
+            </div>
+            <div class="card">
+                <h2>✅ عيال الجروب (دردشة ومكالمات)</h2>
+                <div id="myFriendsContainer">لا يوجد أصدقاء مضافين حالياً.</div>
+            </div>
+        </div>
+
+        <!-- 💬 شاشة الدردشة والرسائل الجماعية -->
+        <div id="screenChat" class="screen">
+            <div class="app-header">
+                <h1>💬 غرف الدردشة والرسائل</h1>
+            </div>
+            
+            <!-- 📢 ميزة الرسائل الجماعية البث المباشر للكل -->
+            <div class="card" style="border: 1px solid #eab308; background: rgba(234, 179, 8, 0.05);">
+                <h2 style="color: #eab308;">📢 بث رسالة جماعية لكل الجروب فوراً</h2>
+                <div class="input-group">
+                    <textarea id="broadcastText" placeholder="اكتب رسالة جماعية تروح لكل الأعضاء في نفس الوقت الحين..."></textarea>
+                </div>
+                <button class="btn" style="background: linear-gradient(90deg, #eab308, #ca8a04);" onclick="sendBroadcastMessage()">إرسال برودكاست جماعي 📣</button>
+            </div>
+
+            <div class="card">
+                <h2>🗣️ المحادثة الحالية: <span id="chatWithTitle" style="color: #06b6d4;">اختر صديق أولاً</span></h2>
+                <div class="chat-box" id="chatBoxMessages"></div>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="chatInputMessage" placeholder="اكتب رسالتك الخاصة...">
+                    <button class="btn" style="width: auto; padding: 0 20px; margin-top: 0;" onclick="sendMessage()">إرسال</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📞 شاشة واجهة المكالمة الصوتية المحاكية الرهيبة -->
+        <div id="screenCall" class="screen">
+            <div class="app-header">
+                <h1>📞 مكالمة صوتية حية</h1>
+            </div>
+            <div class="card call-interface">
+                <div class="call-avatar" id="callAvatarIcon">👤</div>
+                <h2 id="callTargetName" style="color: white; font-size: 22px; margin-bottom: 5px;">خويك</h2>
+                <div class="call-status" id="callStatusText">جاري الاتصال عبر الشبكة الذكية...</div>
+                <button class="hangup-btn" onclick="endCall()">❌</button>
+            </div>
+        </div>
+
+        <!-- 👁️ سجل التحركات السري العام -->
+        <div id="globalLogsCard" class="card" style="display: none; border: 1px dashed #ef4444; background: rgba(239,68,68,0.02); margin-top: 30px;">
+            <h2 style="color: #ef4444; border-bottom-color: rgba(239,68,68,0.15);">👁️ رادار السجلات وتحركات الجروب (لوحة الإدارة)</h2>
+            <ul class="log-list" id="logsContainer"></ul>
+        </div>
+
+        <!-- 🗺️ شريط التنقل السفلي الاحترافي -->
+        <div class="nav-bar" id="appNavBar" style="display: none;">
+            <div class="nav-item active" id="navProfile" onclick="navTo('screenProfile')">👤 الحساب</div>
+            <div class="nav-item" id="navFriends" onclick="navTo('screenFriends')">👥 الأصدقاء</div>
+            <div class="nav-item" id="navChat" onclick="navTo('screenChat')">💬 الدردشة</div>
+            <div class="nav-item" style="color: #ef4444;" onclick="handleLogout()">🚪 خروج</div>
+        </div>
+
+    </div>
+
+    <script>
+        if(!localStorage.getItem('app_users')) localStorage.setItem('app_users', JSON.stringify([]));
+        if(!localStorage.getItem('app_chats')) localStorage.setItem('app_chats', JSON.stringify([]));
+        if(!localStorage.getItem('app_logs')) localStorage.setItem('app_logs', JSON.stringify(["نظام الرادار جاهز لمراقبة الأكشن 🚨"]));
+
+        let currentUser = null;
+        let activeChatFriend = null;
+        let ageInterval = null;
+        let callTimeout = null;
+
+        function handleLogin() {
+            const username = document.getElementById('authUsername').value.trim();
+            const avatar = document.getElementById('authAvatar').value;
+
+            if(!username) { alert("اكتب اسمك الكريم أولاً ليتعرف عليك أصدقاؤك! 😎"); return; }
+
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let userObj = users.find(u => u.name.toLowerCase() === username.toLowerCase());
+
+            if(!userObj) {
+                userObj = { name: username, avatar: avatar, birthdate: "", friends: [] };
+                users.push(userObj);
+                localStorage.setItem('app_users', JSON.stringify(users));
+                addLog(`👤 [ ${username} ] سجل عضوية جديدة ودخل المنصة فوراً!`);
+            } else {
+                addLog(`🔓 [ ${username} ] قام بتسجيل الدخول مجدداً.`);
+            }
+
+            currentUser = userObj;
+            
+            document.getElementById('myUsernameDisplay').innerText = currentUser.name;
+            document.getElementById('myAvatarDisplay').innerText = currentUser.avatar;
+            if(currentUser.birthdate) {
+                document.getElementById('myBirthdate').value = currentUser.birthdate;
+                startAgeClock();
+            }
+
+            document.getElementById('screenAuth').classList.remove('active-screen');
+            document.getElementById('appNavBar').style.display = 'flex';
+            document.getElementById('globalLogsCard').style.display = 'block';
+            
+            navTo('screenProfile');
+            renderFriendsTab();
+        }
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(screenId).classList.add('active-screen');
+            
+            if(screenId === 'screenProfile') document.getElementById('navProfile').classList.add('active');
+            if(screenId === 'screenFriends') { document.getElementById('navFriends').classList.add('active'); renderFriendsTab(); }
+            if(screenId === 'screenChat') { document.getElementById('navChat').classList.add('active'); loadMessages(); }
+        }
+
+        function saveBirthdate() {
+            const dateVal = document.getElementById('myBirthdate').value;
+            if(!dateVal) return;
+
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            me.birthdate = dateVal;
+            localStorage.setItem('app_users', JSON.stringify(users));
+            currentUser.birthdate = dateVal;
+
+            addLog(`🗓️ [ ${currentUser.name} ] حدّث تاريخ ميلاده وحسب عمره بدقة.`);
+            startAgeClock();
+        }
+
+        function startAgeClock() {
+            if(ageInterval) clearInterval(ageInterval);
+            ageInterval = setInterval(() => {
+                if(!currentUser.birthdate) return;
+                const birth = new Date(currentUser.birthdate);
+                const now = new Date();
+                const diff = now - birth;
+
+                if (diff < 0) { document.getElementById('liveAgeOutput').innerText = "تاريخ الميلاد في المستقبل! 🛸"; return; }
+
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('liveAgeOutput').innerHTML = `
+                    عمرك الحين هو:<br>
+                    <span style="font-size: 20px; color: #a855f7;">${years} سنة</span> و ${days} يوم<br>
+                    و ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية
+                `;
+            }, 1000);
+        }
+
+        // ❤️ دالة رادار نسبة الحب والانسجام
+        function checkLovePercent() {
+            const name = document.getElementById('loveNameTarget').value.trim();
+            if(!name) { alert("اكتب اسم الطرف الثاني أولاً! 🥰"); return; }
+            
+            // حساب نسبة ذكية تعتمد على الحروف عشان تطلع ثابتة لنفس الأسماء
+            let sum = 0;
+            for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+            for (let i = 0; i < currentUser.name.length; i++) sum += currentUser.name.charCodeAt(i);
+            
+            const percent = (sum % 41) + 60; // النسبة تطلع بين 60% و 100% دايماً طقطقة وفرحة
+            
+            let msg = `نسبة الانسجام والحب بينك وبين ${name} هي <span style="font-size:22px; font-weight:900;">${percent}%</span> ❤️<br>`;
+            if(percent > 85) msg += "🔥 هذا عشق أسطوري لا ينتهي!";
+            else msg += "✨ علاقة متزنة وجميلة جداً الله يديمكم.";
+
+            document.getElementById('loveOutput').innerHTML = msg;
+            addLog(`❤️ [ ${currentUser.name} ] قاس نسبة الحب مع [ ${name} ] وطلعت النتيجة ${percent}%`);
+        }
+
+        function renderFriendsTab() {
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            
+            const allUsersCont = document.getElementById('allUsersContainer');
+            const myFriendsCont = document.getElementById('myFriendsContainer');
+            
+            allUsersCont.innerHTML = '';
+            myFriendsCont.innerHTML = '';
+
+            let checkOthers = false;
+            users.forEach(u => {
+                if(u.name !== currentUser.name && !me.friends.includes(u.name)) {
+                    checkOthers = true;
+                    const div = document.createElement('div');
+                    div.className = 'user-row';
+                    div.innerHTML = `
+                        <span>${u.avatar} ${u.name}</span>
+                        <button class="add-friend-btn" onclick="addFriend('${u.name}')">إضافة لصداقاتي ➕</button>
+                    `;
+                    allUsersCont.appendChild(div);
+                }
+            });
+            if(!checkOthers) allUsersCont.innerHTML = '<p style="color:#94a3b8; font-size:12px; text-align:center;">ما في أعضاء آخرين حالياً بالمنصة لطلب صداقتهم.</p>';
+
+            if(me.friends.length === 0) {
+                myFriendsCont.innerText = "لم تضف أي صديق بعد. أضف من القائمة بالأعلى.";
+            } else {
+                me.friends.forEach(fName => {
+                    const friendObj = users.find(u => u.name === fName);
+                    if(friendObj) {
+                        const div = document.createElement('div');
+                        div.className = 'user-row';
+                        div.innerHTML = `
+                            <span>${friendObj.avatar} ${friendObj.name}</span>
+                            <div style="display:flex; gap:5px;">
+                                <button class="add-friend-btn" style="background:#a855f7;" onclick="openChat('${friendObj.name}')">شات 💬</button>
+                                <button class="add-friend-btn" style="background:#10b981;" onclick="startCall('${friendObj.name}', '${friendObj.avatar}')">اتصال 📞</button>
+                            </div>
+                        `;
+                        myFriendsCont.appendChild(div);
+                    }
+                });
+            }
+        }
+
+        function addFriend(name) {
+            let users = JSON.parse(localStorage.getItem('app_users'));
+            let me = users.find(u => u.name === currentUser.name);
+            if(!me.friends.includes(name)) {
+                me.friends.push(name);
+                localStorage.setItem('app_users', JSON.stringify(users));
+                addLog(`🤝 [ ${currentUser.name} ] أضاف [ ${name} ] لقائمة الأصدقاء.`);
+                renderFriendsTab();
+            }
+        }
+
+        function openChat(friendName) {
+            activeChatFriend = friendName;
+            document.getElementById('chatWithTitle').innerText = friendName;
+            navTo('screenChat');
+        }
+
+        function sendMessage() {
+            const inp = document.getElementById('chatInputMessage');
+            const txt = inp.value.trim();
+            if(!txt || !activeChatFriend) return;
+
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            chats.push({ from: currentUser.name, to: activeChatFriend, msg: txt, isBroadcast: false });
+            localStorage.setItem('app_chats', JSON.stringify(chats));
+
+            addLog(`💬 [ ${currentUser.name} ] أرسل رسالة إلى [ ${activeChatFriend} ].`);
+            inp.value = '';
+            loadMessages();
+        }
+
+        // 📢 دالة إرسال الرسائل الجماعية (البرودكاست لكل الأعضاء)
+        function sendBroadcastMessage() {
+            const tx = document.getElementById('broadcastText');
+            const msgText = tx.value.trim();
+            if(!msgText) { alert("اكتب نص الرسالة الجماعية أولاً! 📢"); return; }
+
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            chats.push({ from: currentUser.name, to: 'ALL_GROUP', msg: `📢 رسالة جماعية من [ ${currentUser.name} ]: ${msgText}`, isBroadcast: true });
+            localStorage.setItem('app_chats', JSON.stringify(chats));
+
+            addLog(`📢 [ ${currentUser.name} ] بث رسالة جماعية شاملة لكل أعضاء الجروب.`);
+            tx.value = '';
+            loadMessages();
+            alert("تم بث الرسالة الجماعية لكل غرف الدردشة بنجاح! 🚀");
+        }
+
+        function loadMessages() {
+            const box = document.getElementById('chatBoxMessages');
+            box.innerHTML = '';
+
+            let chats = JSON.parse(localStorage.getItem('app_chats'));
+            
+            chats.forEach(c => {
+                if(c.isBroadcast) {
+                    const div = document.createElement('div');
+                    div.className = 'chat-msg msg-broadcast';
+                    div.innerText = c.msg;
+                    box.appendChild(div);
+                } else if(activeChatFriend && (
+                    (c.from === currentUser.name && c.to === activeChatFriend) || 
+                    (c.from === activeChatFriend && c.to === currentUser.name)
+                )) {
+                    const div = document.createElement('div');
+                    div.className = `chat-msg ${c.from === currentUser.name ? 'msg-me' : 'msg-other'}`;
+                    div.innerText = c.msg;
+                    box.appendChild(div);
+                }
+            });
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // 📞 إدارة شاشة المكالمات الصوتية الحية المحاكية
+        function startCall(name, avatar) {
+            document.getElementById('callTargetName').innerText = name;
+            document.getElementById('callAvatarIcon').innerText = avatar;
+            document.getElementById('callStatusText').innerText = "جاري الاتصال الصوتي الآمن عبر السيرفر... 📞";
+            
+            navTo('screenCall');
+            addLog(`📞 [ ${currentUser.name} ] بدأ مكالمة صوتية مع [ ${name} ].`);
+
+            callTimeout = setTimeout(() => {
+                document.getElementById('callStatusText').innerText = "🔴 مكالمة متصلة (00:03).. الصوت واضح وصافي الحين!";
+            }, 2500);
+        }
+
+        function endCall() {
+            if(callTimeout) clearTimeout(callTimeout);
+            document.getElementById('callStatusText').innerText = "تم إنهاء المكالمة بنجاح 🔚";
+            addLog(`❌ [ ${currentUser.name} ] أنهى المكالمة الجارية.`);
+            setTimeout(() => { navTo('screenFriends'); }, 800);
+        }
+
+        function addLog(logText) {
+            let logs = JSON.parse(localStorage.getItem('app_logs')) || [];
+            const time = new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'});
+            logs.unshift(`[${time}] ${logText}`);
+            localStorage.setItem('app_logs', JSON.stringify(logs));
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            let logs = JSON.parse(localStorage.getItem('app_logs'));
+            logs.forEach(l => {
+                const li = document.createElement('li');
+                li.className = 'log-item';
+                li.innerText = l;
+                container.appendChild(li);
+            });
+        }
+
+        function handleLogout() {
+            if(ageInterval) clearInterval(ageInterval);
+            if(callTimeout) clearTimeout(callTimeout);
+            addLog(`🚪 [ ${currentUser.name} ] سجل خروجه من المنصة.`);
+            currentUser = null;
+            activeChatFriend = null;
+            
+            document.getElementById('appNavBar').style.display = 'none';
+            document.getElementById('globalLogsCard').style.display = 'none';
+            document.getElementById('authUsername').value = '';
+            
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById('screenAuth').classList.add('active-screen');
+        }
+
+        renderLogs();
+    </script>
+</body>
+</html>
+
